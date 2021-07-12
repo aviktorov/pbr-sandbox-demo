@@ -3,6 +3,7 @@
 class ApplicationFileSystem;
 class SwapChain;
 class RenderGraph;
+class ResourceManager;
 
 struct GLFWwindow;
 
@@ -41,6 +42,7 @@ private:
 	ApplicationFileSystem *file_system {nullptr};
 	SwapChain *swap_chain {nullptr};
 	RenderGraph *render_graph {nullptr};
+	ResourceManager *resource_manager {nullptr};
 
 	render::backend::Driver *driver {nullptr};
 	render::shaders::Compiler *compiler {nullptr};

@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "IO.h"
 #include "RenderGraph.h"
+#include "ResourceManager.h"
 #include "SwapChain.h"
 
 #include <render/shaders/Compiler.h>
@@ -22,20 +23,26 @@ void Application::init(int window_width, int window_height)
 	glfwSetFramebufferSizeCallback(window, &Application::onFramebufferResize);
 
 	file_system = new ApplicationFileSystem("assets/");
-
+	
 	driver = render::backend::Driver::create("PBR Sandbox", "Scape", render::backend::Api::VULKAN);
 	compiler = render::shaders::Compiler::create(render::shaders::ShaderILType::SPIRV, file_system);
 
+	resource_manager = new ResourceManager(driver, compiler, file_system);
+	
 	swap_chain = new SwapChain(driver);
 	swap_chain->init(getNativeHandle());
 
-	render_graph = new RenderGraph(driver, compiler);
+	render_graph = new RenderGraph(driver, compiler, resource_manager);
+	render_graph->init(window_width, window_height);
 
 	running = true;
 }
 
 void Application::shutdown()
 {
+	delete resource_manager;
+	resource_manager = nullptr;
+
 	delete render_graph;
 	render_graph = nullptr;
 
@@ -94,6 +101,7 @@ void Application::onFramebufferResize(GLFWwindow *window, int width, int height)
 
 	application->driver->wait();
 	application->swap_chain->recreate(application->getNativeHandle());
+	application->render_graph->resize(width, height);
 }
 
 /*

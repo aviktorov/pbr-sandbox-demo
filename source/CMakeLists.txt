@@ -14,18 +14,13 @@ endif()
 # ==================================================================================================
 # Dependencies
 # ==================================================================================================
-add_library(shaderc SHARED IMPORTED)
+add_library(scapes SHARED IMPORTED)
 
 if (WIN32)
-	set_target_properties(shaderc PROPERTIES IMPORTED_IMPLIB ${DIR_THIRDPARTY}/shaderc/lib/${SCAPES_PLATFORM}/${SCAPES_ABI}/shaderc_shared.lib)
-	set_target_properties(shaderc PROPERTIES IMPORTED_LOCATION ${DIR_THIRDPARTY}/shaderc/bin/${SCAPES_PLATFORM}/${SCAPES_ABI}/shaderc_shared.dll)
-endif()
-
-add_library(scapes STATIC IMPORTED)
-
-if (WIN32)
-	set_target_properties(scapes PROPERTIES IMPORTED_LOCATION_RELEASE ${DIR_THIRDPARTY}/scapes/lib/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapes-vs2019.lib)
-	set_target_properties(scapes PROPERTIES IMPORTED_LOCATION_DEBUG ${DIR_THIRDPARTY}/scapes/lib/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapesd-vs2019.lib)
+	set_target_properties(scapes PROPERTIES IMPORTED_LOCATION_RELEASE ${DIR_THIRDPARTY}/scapes/lib/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapes.dll)
+	set_target_properties(scapes PROPERTIES IMPORTED_LOCATION_DEBUG ${DIR_THIRDPARTY}/scapes/lib/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapesd.dll)
+	set_target_properties(scapes PROPERTIES IMPORTED_IMPLIB_RELEASE ${DIR_THIRDPARTY}/scapes/lib/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapes.lib)
+	set_target_properties(scapes PROPERTIES IMPORTED_IMPLIB_DEBUG ${DIR_THIRDPARTY}/scapes/lib/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapesd.lib)
 endif()
 
 add_library(glfw3 STATIC IMPORTED)
@@ -73,7 +68,7 @@ target_include_directories(${TARGET} PRIVATE ${DIR_THIRDPARTY}/scapes/include)
 # ==================================================================================================
 # Libraries
 # ==================================================================================================
-target_link_libraries(${TARGET} PUBLIC glfw3 scapes shaderc)
+target_link_libraries(${TARGET} PUBLIC glfw3 scapes)
 
 
 # ==================================================================================================
@@ -82,6 +77,20 @@ target_link_libraries(${TARGET} PUBLIC glfw3 scapes shaderc)
 add_custom_command(
 	TARGET ${TARGET} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
-		${DIR_THIRDPARTY}/shaderc/bin/${SCAPES_PLATFORM}/${SCAPES_ABI}/shaderc_shared.dll
-		${DIR_EXPORT}/${SCAPES_PLATFORM}/${SCAPES_ABI}/shaderc_shared.dll
+		${DIR_THIRDPARTY}/scapes/lib/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapes.dll
+		${DIR_EXPORT}/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapes.dll
+)
+
+add_custom_command(
+	TARGET ${TARGET} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
+		${DIR_THIRDPARTY}/scapes/lib/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapesd.dll
+		${DIR_EXPORT}/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapesd.dll
+)
+
+add_custom_command(
+	TARGET ${TARGET} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
+		${DIR_THIRDPARTY}/scapes/lib/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapesd.pdb
+		${DIR_EXPORT}/${SCAPES_PLATFORM}/${SCAPES_ABI}/scapesd.pdb
 )

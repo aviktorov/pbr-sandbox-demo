@@ -49,10 +49,10 @@ void Application::shutdown()
 	delete swap_chain;
 	swap_chain = nullptr;
 
-	delete driver;
+	render::backend::Driver::destroy(driver);
 	driver = nullptr;
 
-	delete compiler;
+	render::shaders::Compiler::destroy(compiler);
 	compiler = nullptr;
 
 	delete file_system;

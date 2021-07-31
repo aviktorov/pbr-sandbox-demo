@@ -17,14 +17,14 @@
 void Application::init(int window_width, int window_height)
 {
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	window = glfwCreateWindow(window_width, window_height, "Scapes v1.0", nullptr, nullptr);
+	window = glfwCreateWindow(window_width, window_height, "Scapes Demo v0.1.0", nullptr, nullptr);
 
 	glfwSetWindowUserPointer(window, this);
 	glfwSetFramebufferSizeCallback(window, &Application::onFramebufferResize);
 
 	file_system = new ApplicationFileSystem("assets/");
 	
-	driver = render::backend::Driver::create("PBR Sandbox", "Scape", render::backend::Api::VULKAN);
+	driver = render::backend::Driver::create("Scapes Demo", "Scapes", render::backend::Api::VULKAN);
 	compiler = render::shaders::Compiler::create(render::shaders::ShaderILType::SPIRV, file_system);
 
 	resource_manager = new ResourceManager(driver, compiler, file_system);

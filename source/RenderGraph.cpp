@@ -1,5 +1,6 @@
 #include "RenderGraph.h"
 #include "ResourceManager.h"
+#include "GameModule.h"
 
 #include <render/backend/Driver.h>
 #include <render/shaders/Compiler.h>
@@ -12,12 +13,13 @@ struct GPUVertex
 	float color[4];
 };
 
-static uint32_t num_vertices = 3;
+static uint32_t num_vertices = 4;
 static GPUVertex vertices[] =
 {
 	{ -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
 	{  1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f },
-	{  0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
+	{  1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
+	{ -1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 1.0f },
 };
 
 static uint8_t num_attributes = 2;
@@ -27,10 +29,11 @@ static render::backend::VertexAttribute attributes[] =
 	{ render::backend::Format::R32G32B32A32_SFLOAT, offsetof(GPUVertex, color) },
 };
 
-static uint32_t num_indices = 3;
+static uint32_t num_indices = 6;
 static uint16_t indices[] =
 {
 	0, 1, 2,
+	2, 3, 0,
 };
 
 /*
@@ -85,13 +88,16 @@ void RenderGraph::shutdown()
 	fragment_shader = nullptr;
 }
 
-void RenderGraph::render(render::backend::CommandBuffer *command_buffer, render::backend::SwapChain *swap_chain)
+void RenderGraph::render(render::backend::CommandBuffer *command_buffer, render::backend::SwapChain *swap_chain, const RenderGraphData &data)
 {
 	if (swap_chain_render_pass == nullptr)
 	{
 		render::backend::RenderPassClearColor clear_color = {0.0f, 0.0f, 0.0f, 1.0f};
 		swap_chain_render_pass = driver->createRenderPass(swap_chain, render::backend::RenderPassLoadOp::CLEAR, render::backend::RenderPassStoreOp::STORE, &clear_color);
 	}
+
+	driver->clearPushConstants(pipeline_state);
+	driver->setPushConstants(pipeline_state, sizeof(RenderGraphData), &data);
 
 	driver->beginRenderPass(command_buffer, swap_chain_render_pass, swap_chain);
 	driver->drawIndexedPrimitiveInstanced(command_buffer, pipeline_state, index_buffer, num_indices);

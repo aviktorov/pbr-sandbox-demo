@@ -17,6 +17,11 @@ namespace render::shaders
 	class Compiler;
 }
 
+namespace game
+{
+	class World;
+}
+
 /*
  */
 class Application
@@ -33,7 +38,13 @@ public:
 	void *getNativeHandle() const;
 
 private:
+	void initGame(game::World *world, int width, int height);
+	void resizeGame(game::World *world, int width, int height);
+	void shutdownGame(game::World *world);
+
+private:
 	static void onFramebufferResize(GLFWwindow *window, int width, int height);
+	static void onKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 private:
 	GLFWwindow *window {nullptr};
@@ -44,6 +55,7 @@ private:
 	RenderGraph *render_graph {nullptr};
 	ResourceManager *resource_manager {nullptr};
 
+	game::World *world {nullptr};
 	render::backend::Driver *driver {nullptr};
 	render::shaders::Compiler *compiler {nullptr};
 };

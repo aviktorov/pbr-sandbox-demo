@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <glm/matrix.hpp>
+
 namespace render::backend
 {
 	class Driver;
@@ -22,6 +24,12 @@ namespace render::shaders
 
 class ResourceManager;
 
+struct RenderGraphData
+{
+	glm::mat4 projection;
+	glm::mat4 view;
+};
+
 /*
  */
 class RenderGraph
@@ -35,7 +43,7 @@ public:
 	void init(uint32_t width, uint32_t height);
 	void resize(uint32_t width, uint32_t height);
 	void shutdown();
-	void render(render::backend::CommandBuffer *command_buffer, render::backend::SwapChain *swap_chain);
+	void render(render::backend::CommandBuffer *command_buffer, render::backend::SwapChain *swap_chain, const RenderGraphData &data);
 
 private:
 	ResourceManager *resource_manager {nullptr};

@@ -64,6 +64,7 @@ endif()
 target_include_directories(${TARGET} PRIVATE ${DIR_THIRDPARTY})
 target_include_directories(${TARGET} PRIVATE ${DIR_THIRDPARTY}/glfw/include)
 target_include_directories(${TARGET} PRIVATE ${DIR_THIRDPARTY}/scapes/include)
+target_include_directories(${TARGET} PRIVATE ${DIR_THIRDPARTY}/glm)
 
 # ==================================================================================================
 # Libraries

@@ -15,12 +15,23 @@ namespace ecs::game
 		glm::mat4 iworld;
 	};
 
+	struct FPSCameraTransform
+	{
+		float vertical_angle {0.0f};
+		float horizontal_angle {0.0f};
+		glm::vec3 up {0.0f, 0.0f, 1.0f};
+		glm::vec3 position {0.0f, 0.0f, 0.0f};
+	};
+
 	struct Camera
 	{
 		glm::vec4 parameters; // znear, zfar, 1 / znear, 1 / zfar
 		glm::mat4 projection;
 		bool main {false};
 	};
+
+	// Helpers
+	extern glm::vec3 getDirection(const FPSCameraTransform &transform);
 
 	// Iterators / Systems
 
@@ -39,4 +50,10 @@ template<>
 struct game::TypeTraits<ecs::game::Camera>
 {
 	static constexpr const char *name = "ecs::game::Camera";
+};
+
+template<>
+struct game::TypeTraits<ecs::game::FPSCameraTransform>
+{
+	static constexpr const char *name = "ecs::game::FPSCameraTransform";
 };

@@ -42,9 +42,17 @@ private:
 	void resizeGame(game::World *world, int width, int height);
 	void shutdownGame(game::World *world);
 
+	void updateInput();
+
 private:
-	static void onFramebufferResize(GLFWwindow *window, int width, int height);
-	static void onKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods);
+	void onResizeEvent(int width, int height);
+	void onKeyEvent(int key, int scancode, int action, int mods);
+	void onMouseButtonEvent(int button, int action, int mods);
+
+private:
+	static void onGLFWResizeEvent(GLFWwindow *window, int width, int height);
+	static void onGLFWKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods);
+	static void onGLFWMouseButtonEvent(GLFWwindow *window, int button, int action, int mods);
 
 private:
 	GLFWwindow *window {nullptr};
